@@ -681,7 +681,7 @@ Créez un fichier `.env` à la racine du projet :
 
 ```env
 # Configuration de la base de données
-DB_HOST=localhost
+DB_HOST="Server database for MySQL"
 DB_PORT=3306
 DB_NAME=appdb
 DB_USER=votre_utilisateur
