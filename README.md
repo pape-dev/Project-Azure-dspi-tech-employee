@@ -185,19 +185,10 @@ foreach ($VM_NAME in $VMS) {
 Write-Host "---"
 az vm list -g $RESOURCE_GROUP -o table
 ```
-![image](https://hackmd.io/_uploads/BJsLB9-m-l.png)
-![image](https://hackmd.io/_uploads/SJ1HH5ZQbe.png)
 
 ## Déploiement Azure Database pour MySQL
-![image](https://hackmd.io/_uploads/ByVSw9bX-g.png)
-![image](https://hackmd.io/_uploads/B1oMYcZ7Wg.png)
 ## Connexion au server pour la création de la base de données
 - MySQL Workbench
-![image](https://hackmd.io/_uploads/Sy8Dt5W7Wl.png)
-![image](https://hackmd.io/_uploads/rJKjYqZ7bx.png)
-![image](https://hackmd.io/_uploads/S1WRYq-mZx.png)
-![image](https://hackmd.io/_uploads/H1RAK5b7Zl.png)
-![image](https://hackmd.io/_uploads/rybb5qZmZg.png)
 - Création de la base de données et les table
 ```
 -- 1. Création de la base de données
@@ -242,12 +233,9 @@ CREATE TABLE IF NOT EXISTS contact (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ```
-![image](https://hackmd.io/_uploads/r1mL9c-m-g.png)
-![image](https://hackmd.io/_uploads/rJ8YccWQ-x.png)
 
 - Pare-feu de la base de données
 
-![image](https://hackmd.io/_uploads/HyN8j5b7Wg.png)
 ## 🐳 Installation Docker (Script Bash)
 
 - Créer un fichier bash et lui donner les autorisations
