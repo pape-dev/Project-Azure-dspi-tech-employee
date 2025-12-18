@@ -4,6 +4,7 @@ import { Employee } from "@/data/employees";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import {
   Table,
   TableBody,
@@ -43,6 +44,7 @@ const statusConfig = {
 };
 
 export default function Salaries() {
+  const { toast } = useToast();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -168,6 +170,75 @@ export default function Salaries() {
     });
   };
 
+  const handleExportCSV = () => {
+    try {
+      if (filteredAndSortedEmployees.length === 0) {
+        toast({
+          title: "Aucune donnée",
+          description: "Il n'y a aucun employé à exporter.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Créer le contenu CSV
+      const headers = [
+        "ID",
+        "Prénom",
+        "Nom",
+        "Email",
+        "Téléphone",
+        "Département",
+        "Poste",
+        "Statut",
+        "Date d'embauche",
+        "Salaire (€)",
+      ];
+      
+      const csvRows = [
+        headers.join(","),
+        ...filteredAndSortedEmployees.map((employee) => {
+          const row = [
+            employee.id,
+            `"${(employee.firstName || "").replace(/"/g, '""')}"`,
+            `"${(employee.lastName || "").replace(/"/g, '""')}"`,
+            `"${(employee.email || "").replace(/"/g, '""')}"`,
+            `"${(employee.phone || "").replace(/"/g, '""')}"`,
+            `"${(employee.department || "").replace(/"/g, '""')}"`,
+            `"${(employee.position || "").replace(/"/g, '""')}"`,
+            `"${statusConfig[employee.status]?.label || employee.status}"`,
+            `"${formatDate(employee.hireDate || "")}"`,
+            employee.salary || 0,
+          ];
+          return row.join(",");
+        }),
+      ];
+
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `employes_${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Export réussi !",
+        description: `${filteredAndSortedEmployees.length} employé(s) exporté(s) en CSV.`,
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'export CSV :", error);
+      toast({
+        title: "Erreur lors de l'export",
+        description: "Impossible d'exporter les employés.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-10">
@@ -259,7 +330,7 @@ export default function Salaries() {
                   <SelectItem value="inactive">Inactif</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" onClick={handleExportCSV}>
                 <Download className="w-4 h-4" />
                 Exporter
               </Button>

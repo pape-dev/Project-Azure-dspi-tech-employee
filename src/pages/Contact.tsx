@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +59,7 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -184,13 +184,12 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Contact Info */}
           <div className="space-y-6">
-            {contactInfo.map((info, index) => {
+            {contactInfo.map((info) => {
               const Icon = info.icon;
               return (
                 <div
                   key={info.title}
                   className="glass rounded-xl p-6 group hover:border-primary/50 transition-all duration-300 animate-slide-up"
-                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -233,7 +232,6 @@ export default function Contact() {
             <form
               onSubmit={handleSubmit}
               className="glass rounded-2xl p-6 md:p-8 animate-slide-up"
-              style={{ animationDelay: "0.2s" }}
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
