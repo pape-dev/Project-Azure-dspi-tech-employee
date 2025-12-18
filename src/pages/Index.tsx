@@ -29,7 +29,7 @@ export default function Index() {
     const fetchStats = async () => {
       try {
         const baseUrl =
-          import.meta.env.VITE_API_URL || "http://localhost:3000";
+          import.meta.env.VITE_API_URL || "";
 
         const response = await fetch(`${baseUrl}/api/employees`);
         if (!response.ok) {

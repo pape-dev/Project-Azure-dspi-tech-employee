@@ -59,7 +59,7 @@ export default function Salaries() {
         setError(null);
 
         const baseUrl =
-          import.meta.env.VITE_API_URL || "http://localhost:3000";
+          import.meta.env.VITE_API_URL || "";
 
         const response = await fetch(`${baseUrl}/api/employees`);
 
@@ -68,6 +68,8 @@ export default function Salaries() {
         }
 
         const data: Employee[] = await response.json();
+        console.log("Données reçues de l'API:", data);
+        console.log("Nombre d'employés:", data.length);
         setEmployees(data);
       } catch (err) {
         console.error("Erreur lors du chargement des employés :", err);
@@ -89,10 +91,10 @@ export default function Salaries() {
     return employees
       .filter((employee) => {
         const matchesSearch =
-          employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          employee.position.toLowerCase().includes(searchTerm.toLowerCase());
+          employee.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          employee.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          employee.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          employee.position?.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesDepartment =
           departmentFilter === "all" || employee.department === departmentFilter;
@@ -106,24 +108,24 @@ export default function Salaries() {
         let comparison = 0;
         switch (sortField) {
           case "lastName":
-            comparison = a.lastName.localeCompare(b.lastName);
+            comparison = (a.lastName || "").localeCompare(b.lastName || "");
             break;
           case "department":
-            comparison = a.department.localeCompare(b.department);
+            comparison = (a.department || "").localeCompare(b.department || "");
             break;
           case "position":
-            comparison = a.position.localeCompare(b.position);
+            comparison = (a.position || "").localeCompare(b.position || "");
             break;
           case "hireDate":
-            comparison = new Date(a.hireDate).getTime() - new Date(b.hireDate).getTime();
+            comparison = new Date(a.hireDate || 0).getTime() - new Date(b.hireDate || 0).getTime();
             break;
           case "salary":
-            comparison = a.salary - b.salary;
+            comparison = (a.salary || 0) - (b.salary || 0);
             break;
         }
         return sortOrder === "asc" ? comparison : -comparison;
       });
-  }, [searchTerm, departmentFilter, statusFilter, sortField, sortOrder]);
+  }, [employees, searchTerm, departmentFilter, statusFilter, sortField, sortOrder]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {

@@ -38,7 +38,7 @@ export default function Nouveau() {
 
     try {
       const baseUrl =
-        import.meta.env.VITE_API_URL || "http://localhost:3000";
+        import.meta.env.VITE_API_URL || "";
 
       const id = `EMP${Date.now().toString().slice(-6)}`;
 
