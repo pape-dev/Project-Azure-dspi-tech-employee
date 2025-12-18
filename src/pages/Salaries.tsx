@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { employees, Employee } from "@/data/employees";
+import { Employee } from "@/data/employees";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,15 +43,46 @@ const statusConfig = {
 };
 
 export default function Salaries() {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("lastName");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const baseUrl =
+          import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+        const response = await fetch(`${baseUrl}/api/employees`);
+
+        if (!response.ok) {
+          throw new Error(`Erreur API (${response.status})`);
+        }
+
+        const data: Employee[] = await response.json();
+        setEmployees(data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des employés :", err);
+        setError("Impossible de charger les employés. Vérifiez l'API.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
   const departments = useMemo(
     () => [...new Set(employees.map((e) => e.department))],
-    []
+    [employees]
   );
 
   const filteredAndSortedEmployees = useMemo(() => {
@@ -117,7 +148,7 @@ export default function Salaries() {
     active: employees.filter((e) => e.status === "active").length,
     remote: employees.filter((e) => e.status === "remote").length,
     inactive: employees.filter((e) => e.status === "inactive").length,
-  }), []);
+  }), [employees]);
 
   const formatSalary = (salary: number) => {
     return new Intl.NumberFormat("fr-FR", {
@@ -164,7 +195,9 @@ export default function Salaries() {
                     <Icon className={`w-5 h-5 ${stat.color}`} />
                   </div>
                   <div>
-                    <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className={`text-2xl font-bold ${stat.color}`}>
+                      {isLoading ? "-" : stat.value}
+                    </div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </div>
                 </div>
@@ -172,6 +205,19 @@ export default function Salaries() {
             );
           })}
         </div>
+
+        {/* Loading / Error */}
+        {isLoading && (
+          <div className="glass rounded-xl p-6 mb-6 text-center text-muted-foreground">
+            Chargement des employés...
+          </div>
+        )}
+
+        {error && !isLoading && (
+          <div className="glass rounded-xl p-6 mb-6 text-center text-destructive">
+            {error}
+          </div>
+        )}
 
         {/* Filters */}
         <div className="glass rounded-xl p-4 mb-6">
@@ -341,7 +387,7 @@ export default function Salaries() {
             </Table>
           </div>
 
-          {filteredAndSortedEmployees.length === 0 && (
+          {!isLoading && filteredAndSortedEmployees.length === 0 && (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">Aucun employé trouvé</p>

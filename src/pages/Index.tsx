@@ -1,13 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Users, Zap, Shield, ArrowRight, Building2, Globe, Award } from "lucide-react";
-
-const stats = [
-  { value: "150+", label: "Employés", icon: Users },
-  { value: "12", label: "Pays", icon: Globe },
-  { value: "98%", label: "Satisfaction", icon: Award },
-];
 
 const features = [
   {
@@ -28,6 +23,41 @@ const features = [
 ];
 
 export default function Index() {
+  const [employeeCount, setEmployeeCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const baseUrl =
+          import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+        const response = await fetch(`${baseUrl}/api/employees`);
+        if (!response.ok) {
+          throw new Error(`Erreur API (${response.status})`);
+        }
+
+        const data: unknown[] = await response.json();
+        setEmployeeCount(data.length);
+      } catch (error) {
+        console.error("Erreur lors du chargement des statistiques :", error);
+        setEmployeeCount(null);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const stats = [
+    {
+      value:
+        employeeCount === null ? "..." : `${employeeCount}+`,
+      label: "Employés",
+      icon: Users,
+    },
+    { value: "12", label: "Pays", icon: Globe },
+    { value: "98%", label: "Satisfaction", icon: Award },
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}

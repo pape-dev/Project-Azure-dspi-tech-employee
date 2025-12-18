@@ -36,25 +36,61 @@ export default function Nouveau() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const baseUrl =
+        import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-    toast({
-      title: "Employé ajouté avec succès !",
-      description: `${formData.firstName} ${formData.lastName} a été ajouté à l'équipe.`,
-    });
+      const id = `EMP${Date.now().toString().slice(-6)}`;
 
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      department: "",
-      position: "",
-      hireDate: "",
-      salary: "",
-    });
-    setIsSubmitting(false);
+      const response = await fetch(`${baseUrl}/api/employees`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          department: formData.department,
+          position: formData.position,
+          status: "active",
+          hireDate: formData.hireDate,
+          salary: Number(formData.salary),
+          avatar: null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur API (${response.status})`);
+      }
+
+      toast({
+        title: "Employé ajouté avec succès !",
+        description: `${formData.firstName} ${formData.lastName} a été ajouté à l'équipe.`,
+      });
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        department: "",
+        position: "",
+        hireDate: "",
+        salary: "",
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de l'employé :", error);
+      toast({
+        title: "Erreur lors de l'ajout",
+        description: "Impossible d'ajouter l'employé. Vérifiez l'API.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formFields = [
