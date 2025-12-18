@@ -547,9 +547,7 @@ On actualise la page il affiche l'App de la VM 2 :
 ![image](https://hackmd.io/_uploads/Bk5m7pbXbx.png)
 
 
-
 ---
-
 
 ## ✅ Conclusion
 Ce projet valide les compétences suivantes :
@@ -559,3 +557,503 @@ Ce projet valide les compétences suivantes :
 - Haute Disponibilité (Standard Load Balancer).
 - Déployer & héberger des applications 
 - Sécurisation (Groupes de sécurité et SSH).
+
+---
+
+# Application Web : DSPI-TECH Employee Hub
+
+Application web complète de gestion des employés et des contacts pour DSPI-TECH. Cette application permet de gérer les informations des collaborateurs, d'ajouter de nouveaux employés, de consulter les données et d'exporter les informations au format CSV.
+
+## 📋 Table des matières
+
+- [Description](#description)
+- [Fonctionnalités](#fonctionnalités)
+- [Technologies utilisées](#technologies-utilisées)
+- [Prérequis](#prérequis)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Structure du projet](#structure-du-projet)
+- [API Endpoints](#api-endpoints)
+- [Base de données](#base-de-données)
+- [Utilisation](#utilisation)
+- [Scripts disponibles](#scripts-disponibles)
+- [Déploiement](#déploiement)
+- [Contribution](#contribution)
+
+## 🎯 Description
+
+DSPI-TECH Employee Hub est une application full-stack moderne permettant de :
+- Visualiser et gérer les informations des employés
+- Ajouter de nouveaux collaborateurs
+- Gérer les contacts via un formulaire
+- Exporter les données en CSV
+- Filtrer et trier les données des employés
+
+## ✨ Fonctionnalités
+
+### Page d'accueil (Index)
+- Vue d'ensemble avec statistiques des employés
+- Présentation des fonctionnalités principales
+- Navigation vers les différentes sections
+
+### Gestion des salariés (Salaries)
+- Affichage de tous les employés dans un tableau interactif
+- Recherche par nom, email ou poste
+- Filtrage par département et statut
+- Tri par nom, département, poste, date d'embauche ou salaire
+- Statistiques en temps réel (Total, Actifs, Remote, Inactifs)
+- Export CSV des employés filtrés
+
+### Ajout d'employé (Nouveau)
+- Formulaire complet pour ajouter un nouvel employé
+- Validation des champs obligatoires
+- Génération automatique d'ID unique
+- Gestion des départements et postes prédéfinis
+
+### Contact
+- Formulaire de contact pour les visiteurs
+- Enregistrement des messages en base de données
+- Export CSV des contacts
+- Informations de contact de l'entreprise
+
+## 🛠 Technologies utilisées
+
+### Frontend
+- **React 18.3.1** - Bibliothèque UI
+- **TypeScript 5.8.3** - Typage statique
+- **Vite 7.3.0** - Build tool et dev server
+- **React Router DOM 6.30.1** - Routage
+- **Tailwind CSS 3.4.17** - Framework CSS
+- **shadcn/ui** - Composants UI basés sur Radix UI
+- **Lucide React** - Icônes
+- **TanStack Query** - Gestion des données serveur
+- **React Hook Form** - Gestion des formulaires
+- **Zod** - Validation de schémas
+
+### Backend
+- **Node.js** - Runtime JavaScript
+- **Express 4.22.1** - Framework web
+- **MySQL2 3.16.0** - Driver MySQL
+- **CORS 2.8.5** - Gestion CORS
+- **dotenv 16.6.1** - Variables d'environnement
+
+### Outils de développement
+- **ESLint** - Linter
+- **TypeScript ESLint** - Linter TypeScript
+- **Concurrently** - Exécution parallèle de scripts
+
+## 📦 Prérequis
+
+Avant de commencer, assurez-vous d'avoir installé :
+
+- **Node.js** (version 18 ou supérieure) - [Télécharger Node.js](https://nodejs.org/)
+- **npm** (inclus avec Node.js) ou **yarn**
+- **MySQL** (version 8.0 ou supérieure) - [Télécharger MySQL](https://dev.mysql.com/downloads/mysql/)
+- **Git** - [Télécharger Git](https://git-scm.com/)
+
+## 🚀 Installation
+
+### 1. Cloner le repository
+
+```bash
+git clone <URL_DU_REPOSITORY>
+cd dspi-tech-employee-hub
+```
+
+### 2. Installer les dépendances
+
+```bash
+npm install
+```
+
+### 3. Configurer la base de données
+
+Créez une base de données MySQL et exécutez le script SQL :
+
+```bash
+mysql -u root -p < Docs_Config/bd.sql
+```
+
+Ou connectez-vous à MySQL et exécutez le contenu du fichier `Docs_Config/bd.sql`.
+
+### 4. Configurer les variables d'environnement
+
+Créez un fichier `.env` à la racine du projet :
+
+```env
+# Configuration de la base de données
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=appdb
+DB_USER=votre_utilisateur
+DB_PASSWORD=votre_mot_de_passe
+
+# Configuration du serveur API
+PORT=3000
+
+# Configuration du frontend (optionnel)
+VITE_API_URL=http://localhost:3000
+```
+
+### 5. Démarrer l'application
+
+#### Option 1 : Démarrer frontend et backend ensemble
+```bash
+npm run dev:full
+```
+
+#### Option 2 : Démarrer séparément
+
+Terminal 1 - Frontend :
+```bash
+npm run dev
+```
+
+Terminal 2 - Backend :
+```bash
+npm run server
+```
+
+L'application sera accessible sur :
+- **Frontend** : http://localhost:8080
+- **Backend API** : http://localhost:3000
+
+## ⚙️ Configuration
+
+### Variables d'environnement
+
+#### Backend (`.env`)
+
+| Variable | Description | Exemple |
+|----------|-------------|---------|
+| `DB_HOST` | Adresse du serveur MySQL | `localhost` |
+| `DB_PORT` | Port MySQL | `3306` |
+| `DB_NAME` | Nom de la base de données | `appdb` |
+| `DB_USER` | Utilisateur MySQL | `root` |
+| `DB_PASSWORD` | Mot de passe MySQL | `password` |
+| `PORT` | Port du serveur API | `3000` |
+
+#### Frontend (`.env` ou `.env.local`)
+
+| Variable | Description | Exemple |
+|----------|-------------|---------|
+| `VITE_API_URL` | URL de l'API backend | `http://localhost:3000` |
+
+### Configuration Vite
+
+Le fichier `vite.config.ts` configure :
+- Port du serveur de développement : **8080**
+- Alias `@` pour le dossier `src`
+- Plugin React avec SWC pour une compilation rapide
+
+## 📁 Structure du projet
+
+```
+dspi-tech-employee-hub/
+├── Docs_Config/              # Documentation et scripts
+│   ├── bd.sql               # Script de création de la base de données
+│   ├── Architecture.png     # Diagramme d'architecture
+│   ├── Deploy_VM.ps1       # Script de déploiement PowerShell
+│   └── docker.sh           # Script Docker
+├── public/                   # Fichiers statiques
+│   ├── favicon.ico
+│   └── robots.txt
+├── server/                   # Backend Express
+│   ├── db.js                # Configuration de la connexion MySQL
+│   └── index.js              # Serveur API Express
+├── src/                      # Code source frontend
+│   ├── components/          # Composants React
+│   │   ├── Layout.tsx      # Layout principal
+│   │   ├── NavLink.tsx     # Composant de navigation
+│   │   └── ui/             # Composants shadcn/ui
+│   ├── data/               # Données statiques
+│   │   └── employees.ts    # Types et données d'exemple
+│   ├── hooks/              # Hooks React personnalisés
+│   │   ├── use-mobile.tsx
+│   │   └── use-toast.ts
+│   ├── lib/                # Utilitaires
+│   │   └── utils.ts        # Fonctions utilitaires
+│   ├── pages/              # Pages de l'application
+│   │   ├── Index.tsx       # Page d'accueil
+│   │   ├── Salaries.tsx    # Gestion des salariés
+│   │   ├── Nouveau.tsx     # Ajout d'employé
+│   │   ├── Contact.tsx      # Formulaire de contact
+│   │   └── NotFound.tsx    # Page 404
+│   ├── App.tsx             # Composant racine
+│   ├── App.css             # Styles globaux
+│   ├── index.css           # Styles Tailwind
+│   ├── main.tsx            # Point d'entrée
+│   └── vite-env.d.ts       # Types Vite
+├── .env                     # Variables d'environnement (à créer)
+├── package.json            # Dépendances et scripts
+├── tsconfig.json           # Configuration TypeScript
+├── vite.config.ts          # Configuration Vite
+├── tailwind.config.ts      # Configuration Tailwind
+└── README.md               # Ce fichier
+```
+
+## 🔌 API Endpoints
+
+### Health Check
+```
+GET /api/health
+```
+Vérifie l'état du serveur.
+
+**Réponse :**
+```json
+{
+  "status": "ok"
+}
+```
+
+### Employés
+
+#### Récupérer tous les employés
+```
+GET /api/employees
+```
+
+**Réponse :**
+```json
+[
+  {
+    "id": "EMP123456",
+    "firstName": "Jean",
+    "lastName": "Dupont",
+    "email": "jean.dupont@dspi-tech.com",
+    "phone": "+33 6 12 34 56 78",
+    "department": "IT",
+    "position": "Développeur",
+    "status": "active",
+    "hireDate": "2024-01-15",
+    "salary": 50000,
+    "avatar": null
+  }
+]
+```
+
+#### Créer un nouvel employé
+```
+POST /api/employees
+```
+
+**Body :**
+```json
+{
+  "id": "EMP123456",
+  "firstName": "Jean",
+  "lastName": "Dupont",
+  "email": "jean.dupont@dspi-tech.com",
+  "phone": "+33 6 12 34 56 78",
+  "department": "IT",
+  "position": "Développeur",
+  "status": "active",
+  "hireDate": "2024-01-15",
+  "salary": 50000,
+  "avatar": null
+}
+```
+
+**Réponse :**
+```json
+{
+  "message": "Employé créé",
+  "id": 1
+}
+```
+
+### Contacts
+
+#### Récupérer tous les contacts
+```
+GET /api/contact
+```
+
+**Réponse :**
+```json
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "Question",
+    "message": "Bonjour...",
+    "created_at": "2024-01-15T10:30:00.000Z"
+  }
+]
+```
+
+#### Créer un nouveau contact
+```
+POST /api/contact
+```
+
+**Body :**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "Question",
+  "message": "Bonjour, j'aimerais..."
+}
+```
+
+**Réponse :**
+```json
+{
+  "message": "Contact créé",
+  "id": 1
+}
+```
+
+## 🗄️ Base de données
+
+### Structure
+
+#### Table `employees`
+
+| Colonne | Type | Description |
+|---------|------|-------------|
+| `id` | VARCHAR(50) | Identifiant unique (PK) |
+| `firstName` | VARCHAR(100) | Prénom |
+| `lastName` | VARCHAR(100) | Nom |
+| `email` | VARCHAR(255) | Email (UNIQUE) |
+| `phone` | VARCHAR(50) | Téléphone (nullable) |
+| `department` | VARCHAR(100) | Département |
+| `position` | VARCHAR(100) | Poste |
+| `status` | ENUM | Statut : 'active', 'inactive', 'remote' |
+| `hireDate` | DATE | Date d'embauche |
+| `salary` | DECIMAL(10,2) | Salaire annuel |
+| `avatar` | VARCHAR(255) | URL avatar (nullable) |
+
+#### Table `contact`
+
+| Colonne | Type | Description |
+|---------|------|-------------|
+| `id` | INT | Identifiant auto-incrémenté (PK) |
+| `name` | VARCHAR(255) | Nom complet |
+| `email` | VARCHAR(255) | Email |
+| `subject` | VARCHAR(255) | Sujet |
+| `message` | TEXT | Message |
+| `created_at` | TIMESTAMP | Date de création (auto) |
+
+### Script SQL
+
+Le script de création de la base de données se trouve dans `Docs_Config/bd.sql`.
+
+Pour créer la base de données :
+
+```bash
+mysql -u root -p < Docs_Config/bd.sql
+```
+
+## 💻 Utilisation
+
+### Navigation
+
+L'application propose 4 pages principales :
+
+1. **Accueil** (`/`) - Vue d'ensemble et statistiques
+2. **Salariés** (`/salaries`) - Liste et gestion des employés
+3. **Nouveau** (`/nouveau`) - Formulaire d'ajout d'employé
+4. **Contact** (`/contact`) - Formulaire de contact
+
+### Fonctionnalités principales
+
+#### Gestion des salariés
+- Utilisez la barre de recherche pour filtrer par nom, email ou poste
+- Sélectionnez un département dans le filtre déroulant
+- Filtrez par statut (Actif, Remote, Inactif)
+- Cliquez sur les en-têtes de colonnes pour trier
+- Cliquez sur "Exporter" pour télécharger un CSV
+
+#### Ajout d'employé
+- Remplissez tous les champs obligatoires (marqués d'un *)
+- Sélectionnez un département et un poste dans les listes déroulantes
+- L'ID est généré automatiquement
+- Le statut est défini par défaut sur "active"
+
+#### Contact
+- Remplissez le formulaire de contact
+- Les messages sont enregistrés en base de données
+- Utilisez le bouton "Exporter" pour télécharger tous les contacts en CSV
+
+## 📜 Scripts disponibles
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Démarre le serveur de développement frontend (port 8080) |
+| `npm run server` | Démarre le serveur API backend (port 3000) |
+| `npm run dev:full` | Démarre frontend et backend simultanément |
+| `npm run build` | Compile l'application pour la production |
+| `npm run build:dev` | Compile en mode développement |
+| `npm run preview` | Prévisualise la build de production |
+| `npm run lint` | Exécute ESLint pour vérifier le code |
+
+## 🚢 Déploiement
+
+### Build de production
+
+```bash
+npm run build
+```
+
+Les fichiers compilés seront dans le dossier `dist/`.
+
+### Déploiement du backend
+
+Le serveur Express peut être déployé sur :
+- **Heroku**
+- **Railway**
+- **Render**
+- **VPS** (avec PM2)
+- **Azure App Service**
+
+### Variables d'environnement en production
+
+Assurez-vous de configurer toutes les variables d'environnement nécessaires sur votre plateforme de déploiement.
+
+### Exemple avec PM2
+
+```bash
+# Installer PM2
+npm install -g pm2
+
+# Démarrer le serveur
+pm2 start server/index.js --name "dspi-api"
+
+# Sauvegarder la configuration
+pm2 save
+```
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 📝 Notes
+
+- L'application utilise MySQL pour la persistance des données
+- Le frontend communique avec l'API via des requêtes HTTP
+- Les exports CSV incluent un BOM UTF-8 pour une compatibilité optimale avec Excel
+- Les filtres et tris sont appliqués côté client pour une meilleure performance
+
+## 📄 Licence
+
+Ce projet est privé et propriétaire de DSPI-TECH.
+
+## 👥 Auteurs
+
+- **DSPI-TECH** - Développement initial
+
+## 🆘 Support
+
+Pour toute question ou problème, contactez l'équipe DSPI-TECH.
+
+---
+
+
