@@ -1114,9 +1114,9 @@ Le script applique les standards de sécurité "Enterprise" :
 ```
 <#
 .SYNOPSIS
-    Script de déploiement d'infrastructure Azure Web App Pro.
+    Script de déploiement d'infrastructure Azure Web App.
 .DESCRIPTION
-    Version corrigée pour une compatibilité totale avec Azure Cloud Shell.
+    Prépare l'environnement complet : Monitoring, Sécurité, Tags et Runtime Node.js.
 #>
 
 # --- 1. CONFIGURATION TOUT-EN-UN ---
