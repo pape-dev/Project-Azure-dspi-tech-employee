@@ -1,7 +1,5 @@
 # 📄 Projet Azure Cloud Computing (Examen E4) : Dossier de Conception Détaillé
 
-# 🚀 Azure Enterprise Stack (V10.0)
-
 ![Azure](https://img.shields.io/badge/Cloud-Microsoft%20Azure-0089D6?style=flat&logo=microsoftazure)
 ![PowerShell](https://img.shields.io/badge/Automation-PowerShell-5391FE?style=flat&logo=powershell)
 ![MySQL](https://img.shields.io/badge/Database-MySQL%20Flexible%20Server-4479A1?style=flat&logo=mysql)
